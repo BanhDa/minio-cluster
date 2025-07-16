@@ -1,0 +1,12 @@
+@startuml Presigned Mechanism
+
+participant Client
+participant Server
+
+Client -> Server: getPresignedUploadUrl(bucket, objectName)
+Server --> Client: return uploadFileUrl
+
+Client -> Server: call uploadFileUrl with file data
+Server --> Client: return
+
+@enduml

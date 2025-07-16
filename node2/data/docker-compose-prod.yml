@@ -1,0 +1,18 @@
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: minio-node-2
+    network_mode: host
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_SERVER_URL: http://10.0.2.230:9000
+    volumes:
+      - /mnt/disk1:/data1
+      - /mnt/disk2:/data2
+    command: server http://10.0.2.23/data{1...2} http://10.0.2.230/data{1...2} http://10.0.2.19/data{1...2} --console-address ":9001"
+
+    restart: always

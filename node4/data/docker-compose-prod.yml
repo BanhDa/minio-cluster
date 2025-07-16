@@ -1,0 +1,21 @@
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: minio-node-1
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    volumes:
+      - /mnt/disk1:/data1
+      - /mnt/disk2:/data2
+    networks:
+      - minio-net
+    command: server /data1 /data2 --console-address ":9001"
+    restart: always
+
+networks:
+  minio-net:
+    driver: bridge

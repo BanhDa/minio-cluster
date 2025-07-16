@@ -1,0 +1,84 @@
+services:
+  minio1:
+    image: minio/minio
+    container_name: minio1
+    volumes:
+      - ./node1/data/data1:/data1
+      - ./node1/data/data2:/data2
+    networks:
+      - minio_net
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server http://minio{1...3}/data{1...2} --console-address ":9001"
+    expose:
+      - "9000"
+      - "9001"
+
+  minio2:
+    image: minio/minio
+    container_name: minio2
+    volumes:
+      - ./node2/data/data1:/data1
+      - ./node2/data/data2:/data2
+    networks:
+      - minio_net
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server http://minio{1...3}/data{1...2} --console-address ":9001"
+    expose:
+      - "9000"
+      - "9001"
+
+  minio3:
+    image: minio/minio
+    container_name: minio3
+    volumes:
+      - ./node3/data/data1:/data1
+      - ./node3/data/data2:/data2
+    networks:
+      - minio_net
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server http://minio{1...3}/data{1...2} --console-address ":9001"
+    expose:
+      - "9000"
+      - "9001"
+
+  minio4:
+    image: minio/minio
+    container_name: minio4
+    volumes:
+      - ./node4/data/data1:/data1
+      - ./node4/data/data2:/data2
+    networks:
+      - minio_net
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server http://minio{1...3}/data{1...2} --console-address ":9001"
+    expose:
+      - "9000"
+      - "9001"
+
+  nginx:
+    image: nginx:latest
+    container_name: minio-nginx
+    ports:
+      - "9000:9000" # Load Balancer for MinIO API
+      - "9001:9001" # Load Balancer for MinIO Console
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - minio1
+      - minio2
+      - minio3
+      - minio4
+    networks:
+      - minio_net
+
+networks:
+  minio_net:
+    driver: bridge
